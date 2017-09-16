@@ -4,4 +4,7 @@
    <FileRef
       location = "group:type_traits/type_traits.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:tuple/tuple.xcodeproj">
+   </FileRef>
 </Workspace>
