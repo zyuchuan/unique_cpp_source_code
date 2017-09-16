@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "040AD7131F6D21C2005FC652"
-               BuildableName = "unique_cpp"
-               BlueprintName = "unique_cpp"
-               ReferencedContainer = "container:unique_cpp.xcodeproj">
+               BlueprintIdentifier = "040AD73F1F6D2335005FC652"
+               BuildableName = "type_traits"
+               BlueprintName = "type_traits"
+               ReferencedContainer = "container:type_traits.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -32,10 +32,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "040AD7131F6D21C2005FC652"
-            BuildableName = "unique_cpp"
-            BlueprintName = "unique_cpp"
-            ReferencedContainer = "container:unique_cpp.xcodeproj">
+            BlueprintIdentifier = "040AD73F1F6D2335005FC652"
+            BuildableName = "type_traits"
+            BlueprintName = "type_traits"
+            ReferencedContainer = "container:type_traits.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -55,10 +55,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "040AD7131F6D21C2005FC652"
-            BuildableName = "unique_cpp"
-            BlueprintName = "unique_cpp"
-            ReferencedContainer = "container:unique_cpp.xcodeproj">
+            BlueprintIdentifier = "040AD73F1F6D2335005FC652"
+            BuildableName = "type_traits"
+            BlueprintName = "type_traits"
+            ReferencedContainer = "container:type_traits.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -74,10 +74,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "040AD7131F6D21C2005FC652"
-            BuildableName = "unique_cpp"
-            BlueprintName = "unique_cpp"
-            ReferencedContainer = "container:unique_cpp.xcodeproj">
+            BlueprintIdentifier = "040AD73F1F6D2335005FC652"
+            BuildableName = "type_traits"
+            BlueprintName = "type_traits"
+            ReferencedContainer = "container:type_traits.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
