@@ -7,7 +7,8 @@
 //
 
 #include <iostream>
-#include "tuple.hpp"
+//#include "tuple.hpp"
+#include <tuple>
 
 using namespace std;
 
@@ -35,6 +36,8 @@ int main() {
 //    
 //    cout << typeid(unique_cpp::make_tuple_indices<3>).name() << endl;
     
-    typedef unique_cpp::tuple<int, int, double> IIDType;
-    cout << unique_cpp::tuple_size<IIDType>::value << endl;
+    //typedef unique_cpp::tuple<int, int, double> IIDType;
+    //cout << unique_cpp::tuple_size<IIDType>::value << endl;
+    
+    std::make_tuple(3, 4);
 }

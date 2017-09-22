@@ -46,9 +46,9 @@ namespace unique_cpp {
         typedef typename tuple_element<Index-1, tuple_types<Tail...> >::type type;
     };
     
-    template<size_t I, class ...T>
-    struct tuple_element<I, tuple<T...> > {
-        typedef typename tuple_element<I, tuple_types<T...> >::type type;
+    template<size_t Index, class ...T>
+    struct tuple_element<Index, tuple<T...> > {
+        typedef typename tuple_element<Index, tuple_types<T...> >::type type;
     };
     
     
@@ -60,11 +60,14 @@ namespace unique_cpp {
     struct make_tuple_types_imp<tuple_types<Types...>, T, Start, End> {
         typedef typename std::remove_reference<T>::type Type;
         
-        typedef typename make_tuple_types_imp<tuple_types<Types...,
-                typename std::conditional<std::is_lvalue_reference<T>::value,
-                    typename tuple_element<Start, Type>::type&,
-                    typename tuple_element<Start, Type>::type>::type>,
-                T, Start+1, End>::type type;
+//        typedef typename make_tuple_types_imp<tuple_types<Types...,
+//                typename std::conditional<std::is_lvalue_reference<T>::value,
+//                    typename tuple_element<Start, Type>::type&,
+//                    typename tuple_element<Start, Type>::type>::type>,
+//                T, Start+1, End>::type type;
+        
+        typedef typename make_tuple_types_imp<Types..., tuple_element<Start, Type>::type,
+                                              T, Start+1, End>::type type;
     };
     
     template<class ...Types, class T, size_t End>
@@ -121,9 +124,9 @@ namespace unique_cpp {
         tuple_imp() {}
     
 
-        template<size_t ...Uf, class ...Tf, size_t ...Ul, class ...Tl, class ...Up>
-        explicit tuple_imp(tuple_indices<Uf...>, tuple_types<Tf...>, tuple_indices<Ul...>, tuple_types<Tl...>, Up&& ...u)
-            : tuple_leaf<Uf, Tf>(std::forward<Up>(u))..., tuple_leaf<Ul, Tl>()... {
+        template<size_t ...Uf, class ...Tf, size_t ...Ul, class ...Tl, class ...T>
+        explicit tuple_imp(tuple_indices<Uf...>, tuple_types<Tf...>, tuple_indices<Ul...>, tuple_types<Tl...>, T&& ...t)
+            : tuple_leaf<Uf, Tf>(std::forward<T>(t))..., tuple_leaf<Ul, Tl>()... {
             
             }
     };
