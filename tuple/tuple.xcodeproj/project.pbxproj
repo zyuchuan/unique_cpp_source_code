@@ -233,7 +233,7 @@
 		0472C44F1F6D25DB0042BCC2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				DEVELOPMENT_TEAM = 5597W4KY69;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -243,7 +243,7 @@
 		0472C4501F6D25DB0042BCC2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				DEVELOPMENT_TEAM = 5597W4KY69;
 				PRODUCT_NAME = "$(TARGET_NAME)";
