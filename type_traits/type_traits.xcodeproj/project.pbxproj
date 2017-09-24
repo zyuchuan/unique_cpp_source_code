@@ -241,6 +241,7 @@
 		0472C4621F6D26240042BCC2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LIBRARY = "libc++";
 				DEVELOPMENT_TEAM = 5597W4KY69;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -249,6 +250,7 @@
 		0472C4631F6D26240042BCC2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LIBRARY = "libc++";
 				DEVELOPMENT_TEAM = 5597W4KY69;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

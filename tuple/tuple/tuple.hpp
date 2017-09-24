@@ -9,6 +9,7 @@
 #ifndef tuple_h
 #define tuple_h
 
+#include <utility>
 #include <type_traits>
 
 namespace unique_cpp {
@@ -16,144 +17,130 @@ namespace unique_cpp {
     // forward declaration
     template<class ...T> class tuple;
     
-    
-    // tuple_types
-    template<class ...T> struct tuple_types {};
+    // tuple_element
+    template<size_t Index, class T> class tuple_element;
     
     // tuple_size
-    template<class T> struct tuple_size;
+    template<class ...T> class tuple_size;
     
     template<class ...T>
     class tuple_size<tuple<T...> > : public std::integral_constant<size_t, sizeof...(T)> {};
     
-    template<class ...T>
-    struct tuple_size<tuple_types<T...> > : public std::integral_constant<size_t, sizeof...(T)> {};
     
     
-    // tuple element
-    template<size_t Index, typename T> struct tuple_element;
+    // tuple_types
+    template<class ...T> struct tuple_types {};
     
-    template<size_t Index>
-    struct tuple_element<Index, tuple_types<> > {};
+    // make_tuple_types
+    template<class T, size_t End = tuple_size<T>::value, size_t Start = 0>
+    struct make_tuple_types {};
     
-    template<class Head, class ...Tail>
-    struct tuple_element<0, tuple_types<Head, Tail...> > {
-        typedef Head type;
+    template<class ...T, size_t End>
+    struct make_tuple_types<tuple<T...>, End, 0> {
+        typedef tuple_types<T...> type;
     };
     
-    template<size_t Index, class Head, class ...Tail>
-    struct tuple_element<Index, tuple_types<Head, Tail...> > {
-        typedef typename tuple_element<Index-1, tuple_types<Tail...> >::type type;
+    template<class ...T, size_t End>
+    struct make_tuple_types<tuple_types<T...>, End, 0> {
+        typedef tuple_types<T...> type;
+    };
+    
+    // tuple_indices
+    template<size_t ...value> struct tuple_indices {
+        //const static int values = sizeof...(value);
+    };
+    
+    template<class IndexType, IndexType ...values>
+    struct integer_sequence {
+        template<size_t Start>
+        using to_tuple_indices = tuple_indices<(values + Start)...>;
+    };
+    
+    template<size_t End, size_t Start>
+    using make_indices_imp = typename __make_integer_seq<integer_sequence, size_t, End - Start>::template
+        to_tuple_indices<Start>;
+    
+    template<size_t End, size_t Start = 0>
+    struct make_tuple_indices {
+        typedef make_indices_imp<End, Start> type;
+    };
+    
+    // tuple_element
+    namespace indexer_detail {
+        template<size_t Index, class T>
+        struct indexed {
+            using type = T;
+        };
+        
+        template<class Types, class Indexes> struct indexer;
+        
+        template<class ...Types, size_t ...Index>
+        struct indexer<tuple_types<Types...>, tuple_indices<Index...>>
+            : public indexed<Index, Types>... {};
+        
+        template<size_t Index, class T>
+        indexed<Index, T> at_index(indexed<Index, T> const&);
+    } // namespace indexer_detail
+    
+    template<size_t Index, class ...Types>
+    using type_pack_element = typename decltype(indexer_detail::at_index<Index>(
+          indexer_detail::indexer<tuple_types<Types...>,
+            typename make_tuple_indices<sizeof...(Types)>::type>{}))::type;
+    
+    template<size_t Index, class ...T>
+    struct tuple_element<Index, tuple_types<T...> > {
+        typedef type_pack_element<Index, T...> type;
     };
     
     template<size_t Index, class ...T>
     struct tuple_element<Index, tuple<T...> > {
-        typedef typename tuple_element<Index, tuple_types<T...> >::type type;
-    };
-    
-    
-    // make_tuple_types
-    template<class Types, class T, size_t Start, size_t End>
-    struct make_tuple_types_imp;
-    
-    template<class ...Types, class T, size_t Start, size_t End>
-    struct make_tuple_types_imp<tuple_types<Types...>, T, Start, End> {
-        typedef typename std::remove_reference<T>::type Type;
-        
-//        typedef typename make_tuple_types_imp<tuple_types<Types...,
-//                typename std::conditional<std::is_lvalue_reference<T>::value,
-//                    typename tuple_element<Start, Type>::type&,
-//                    typename tuple_element<Start, Type>::type>::type>,
-//                T, Start+1, End>::type type;
-        
-        typedef typename make_tuple_types_imp<Types..., tuple_element<Start, Type>::type,
-                                              T, Start+1, End>::type type;
-    };
-    
-    template<class ...Types, class T, size_t End>
-    struct make_tuple_types_imp<tuple_types<Types...>, T, End, End> {
-        typedef tuple_types<Types...> type;
-    };
-    
-    template<class T, size_t End = tuple_size<typename std::remove_reference<T>::type>::value, size_t Start = 0>
-    struct make_tuple_types {
-        typedef typename make_tuple_types_imp<tuple_types<>, T, Start, End>::type type;
-    };
-    
-    
-    // make_tuple_indices
-    template<size_t...> struct tuple_indices {};
-    
-    template<size_t Start, class Tuple, size_t End>
-    struct make_indices_imp;
-    
-    template<size_t Start, size_t ...Indices, size_t End>
-    struct make_indices_imp<Start, tuple_indices<Indices...>, End> {
-        typedef typename make_indices_imp<Start+1, tuple_indices<Indices..., Start>, End>::type type;
-    };
-    
-    template<size_t End, size_t ...Indices>
-    struct make_indices_imp<End, tuple_indices<Indices...>, End> {
-        typedef tuple_indices<Indices...> type;
-    };
-    
-    template<size_t End, size_t Start = 0>
-    struct make_tuple_indices {
-        typedef typename make_indices_imp<Start, tuple_indices<>, End>::type type;
+        typedef type_pack_element<Index, T...> type;
     };
     
     // tuple_leaf
     template<size_t Index, class Head>
-    struct tuple_leaf {
+    class tuple_leaf {
         Head value;
         
+    public:
         tuple_leaf() : value() {}
         
         template<class T>
-        explicit tuple_leaf(T &&t) : value(std::forward<T>(t)) {}
+        explicit tuple_leaf(const T& t) : value(t) {}
         
-        Head& get() { return value;}
+        Head& get() {return value;}
+        const Head& get() const {return value;}
     };
     
     // tuple_imp
     template<class Index, class ...T> struct tuple_imp;
-    
+
     template<size_t ...Index, class ...T>
     struct tuple_imp<tuple_indices<Index...>, T...> : public tuple_leaf<Index, T>... {
-
+        
         tuple_imp() {}
-    
-
-        template<size_t ...Uf, class ...Tf, size_t ...Ul, class ...Tl, class ...T>
-        explicit tuple_imp(tuple_indices<Uf...>, tuple_types<Tf...>, tuple_indices<Ul...>, tuple_types<Tl...>, T&& ...t)
-            : tuple_leaf<Uf, Tf>(std::forward<T>(t))..., tuple_leaf<Ul, Tl>()... {
-            
-            }
+        
+        template<size_t ...Uf, class ...Tf, class ...U>
+        tuple_imp(tuple_indices<Uf...>, tuple_types<Tf...>, U&& ...u) :
+                tuple_leaf<Uf, Tf>(std::forward<U>(u))... {
+                    
+                }
     };
-    
+
     template<class ...T>
     struct tuple {
         typedef tuple_imp<typename make_tuple_indices<sizeof...(T)>::type, T...> base;
-        
         base base_;
-        
-        explicit tuple(const T& ...t) : base_(typename make_tuple_indices<sizeof...(T)>::type(),
-                                              typename make_tuple_types<tuple, sizeof...(T)>::type(),
-                                              typename make_tuple_indices<0>::type(),
-                                              typename make_tuple_types<tuple, 0>::type(),
-                                              t...) {
-        }
+
+        tuple(const T& ...t) : base_(typename make_tuple_indices<sizeof...(T)>::type(),
+                                     typename make_tuple_types<tuple, sizeof...(T)>::type(),
+                                     t...) {}
     };
     
     template<class T>
     struct make_tuple_return_imp {
         typedef T type;
     };
-    
-//    template<class T>
-//    struct make_tuple_return_imp<std::reference_wrapper<T> > {
-//        typedef T& type;
-//    };
     
     template<class T>
     struct make_tuple_return {
@@ -167,11 +154,10 @@ namespace unique_cpp {
     
     // get
     template<size_t Index, class ...T>
-    inline typename tuple_element<Index, tuple<T...> >::type& get(tuple<T...> &t) {
+    inline typename tuple_element<Index, tuple<T...> >::type& get(tuple<T...>& t) {
         typedef typename tuple_element<Index, tuple<T...> >::type type;
         return static_cast<tuple_leaf<Index, type>&>(t.base_).get();
     }
+    
 }
-
-
 #endif /* tuple_h */
