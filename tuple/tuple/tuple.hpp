@@ -85,7 +85,7 @@ namespace unique_cpp {
     template<size_t Index, class ...Types>
     using type_pack_element = typename decltype(indexer_detail::at_index<Index>(
           indexer_detail::indexer<tuple_types<Types...>,
-            typename make_tuple_indices<sizeof...(Types)>::type>{}))::type;
+            typename make_tuple_indices<sizeof...(Types)>::type>()))::type;
     
     template<size_t Index, class ...T>
     struct tuple_element<Index, tuple_types<T...> > {
