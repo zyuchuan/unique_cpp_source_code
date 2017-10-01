@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:unordered_set/unordered_set.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:type_traits/type_traits.xcodeproj">
    </FileRef>
    <FileRef
